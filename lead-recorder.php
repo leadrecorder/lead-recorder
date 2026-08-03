@@ -133,7 +133,7 @@ function lead_recorder_render_settings_page() {
 							name="<?php echo esc_attr( LEAD_RECORDER_OPTION ); ?>"
 							rows="3"
 							class="large-text code"
-							placeholder="<?php echo esc_attr( '<script src="https://www.leadrecorder.com/api/script/YOUR_KEY" defer></script>' ); ?>"
+							placeholder="<?php echo esc_attr__( 'YOUR_KEY — or paste the full snippet, either works', 'lead-recorder' ); ?>"
 						><?php echo esc_textarea( $key ); ?></textarea>
 						<p class="description">
 							<?php esc_html_e( 'Paste the whole snippet, or just the key — either works.', 'lead-recorder' ); ?>
