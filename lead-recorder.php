@@ -3,7 +3,7 @@
  * Plugin Name: Lead Recorder
  * Plugin URI: https://www.leadrecorder.com/docs/wordpress-manual
  * Description: Adds your Lead Recorder tracking snippet to the &lt;head&gt; of every page. Paste the snippet from your Lead Recorder dashboard and save.
- * Version: 1.0.0
+ * Version: 1.0.1
  * Requires at least: 5.8
  * Requires PHP: 7.4
  * Author: Lead Recorder
@@ -20,6 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 define( 'LEAD_RECORDER_OPTION', 'lead_recorder_snippet_key' );
 define( 'LEAD_RECORDER_SCRIPT_HOST', 'www.leadrecorder.com' );
+define( 'LEAD_RECORDER_VERSION', '1.0.1' );
 
 /**
  * Pull a snippet key out of whatever the user pasted.
@@ -132,7 +133,7 @@ function lead_recorder_render_settings_page() {
 							name="<?php echo esc_attr( LEAD_RECORDER_OPTION ); ?>"
 							rows="3"
 							class="large-text code"
-							placeholder='<script src="https://www.leadrecorder.com/api/script/YOUR_KEY" defer></script>'
+							placeholder="<?php echo esc_attr( '<script src="https://www.leadrecorder.com/api/script/YOUR_KEY" defer></script>' ); ?>"
 						><?php echo esc_textarea( $key ); ?></textarea>
 						<p class="description">
 							<?php esc_html_e( 'Paste the whole snippet, or just the key — either works.', 'lead-recorder' ); ?>
@@ -147,12 +148,12 @@ function lead_recorder_render_settings_page() {
 }
 
 /**
- * Print the snippet in <head>.
+ * Enqueue the tracking script in <head>.
  *
- * We rebuild the <script> tag ourselves from the stored, validated key —
+ * We rebuild the script src ourselves from the stored, validated key —
  * we never echo raw user input here.
  */
-function lead_recorder_print_snippet() {
+function lead_recorder_enqueue_script() {
 	$key = get_option( LEAD_RECORDER_OPTION, '' );
 
 	if ( '' === $key || ! preg_match( '/^[A-Za-z0-9_-]{6,128}$/', $key ) ) {
@@ -161,12 +162,18 @@ function lead_recorder_print_snippet() {
 
 	$src = sprintf( 'https://%s/api/script/%s', LEAD_RECORDER_SCRIPT_HOST, $key );
 
-	printf(
-		'<script src="%s" defer></script>' . "\n",
-		esc_url( $src )
+	wp_enqueue_script(
+		'lead-recorder',
+		$src,
+		array(),
+		LEAD_RECORDER_VERSION,
+		array(
+			'strategy'  => 'defer',
+			'in_footer' => false,
+		)
 	);
 }
-add_action( 'wp_head', 'lead_recorder_print_snippet', 1 );
+add_action( 'wp_enqueue_scripts', 'lead_recorder_enqueue_script' );
 
 /**
  * Remove our data if the plugin is deleted from the Plugins screen.
