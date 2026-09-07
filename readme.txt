@@ -1,6 +1,6 @@
-=== Lead Recorder ===
+=== Lead Recorder – Lead Source Tracking for Calls and Forms ===
 Contributors: leadrecorder, tomgalland21
-Tags: leads, call tracking, form tracking, analytics, conversion tracking
+Tags: lead tracking, call tracking, form tracking, conversion tracking, google ads
 Requires at least: 5.8
 Tested up to: 7.0
 Requires PHP: 7.4
@@ -8,7 +8,7 @@ Stable tag: 1.0.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Track leads, phone calls, form submissions and booking clicks on your WordPress site with one snippet from Lead Recorder.
+Lead tracking for WordPress. See which ad, search or post produced every phone click, form submission and booking on your site.
 
 == Description ==
 
@@ -16,11 +16,23 @@ Adds your [Lead Recorder](https://www.leadrecorder.com) tracking snippet to ever
 
 Lead Recorder shows you where every lead came from. It matches each phone click, form submission and booking to the ad, search or post that produced it.
 
+Most tracking setups only record form submissions. On a lot of local service websites the phone is the front door: someone lands from a Google Ads campaign, reads a page, taps the number and calls. No form, no thank you page, nothing for a conversion tag to fire on. Lead Recorder records that tap and the source behind it.
+
 = What it does =
 
-Once you paste in your tracking key, the plugin enqueues a single tracking script on every page view. That's it — the tracking itself happens in Lead Recorder.
+Once you paste in your tracking key, the plugin enqueues a single tracking script on every page view. That's it, the tracking itself happens in Lead Recorder.
 
 The plugin stores only the tracking key extracted from your snippet and builds the script tag itself. It never renders raw pasted markup back onto your site.
+
+= What gets tracked =
+
+* Phone number clicks
+* Form submissions
+* Booking and calendar link clicks
+* Email address clicks
+* The page journey before each enquiry
+
+Each one is matched back to its source: Google Ads campaign, organic search, referral, social or direct.
 
 = What gets sent =
 
@@ -52,15 +64,27 @@ Privacy Policy: https://www.leadrecorder.com/privacy
 
 = Do I need a paid Lead Recorder plan? =
 
-No, the free tier works.
+Lead Recorder offers a 14-day free trial, after which a paid plan is required to keep tracking leads. Plans start at the Business tier (A$39/mo, or A$390/yr).
+
+= Does this track phone calls? =
+
+It records the tap on a phone number, and the source that brought that visitor to your site. It can't tell you whether the call connected or how long it lasted, since that needs a call tracking number rather than a website script.
 
 = Does this plugin set cookies? =
 
 No. See the Lead Recorder privacy policy for details on how the tracking script itself handles data.
 
+= Will it work with my forms plugin? =
+
+It listens for form submissions generically rather than integrating with a specific plugin, so Contact Form 7, Gravity Forms, WPForms, Elementor forms and most others work without extra setup.
+
 = What happens if I don't enter a tracking key? =
 
 Nothing is loaded on your site. The plugin only enqueues the tracking script once a valid key has been saved.
+
+= Does it slow my site down? =
+
+The script is loaded with `defer` so it doesn't block page rendering.
 
 == Screenshots ==
 
