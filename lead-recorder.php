@@ -3,7 +3,7 @@
  * Plugin Name: Lead Recorder
  * Plugin URI: https://www.leadrecorder.com/docs/wordpress-manual
  * Description: Adds your Lead Recorder tracking snippet to the &lt;head&gt; of every page, and records paid WooCommerce orders with the source that drove them. Paste the snippet from your Lead Recorder dashboard and save.
- * Version: 1.1.0
+ * Version: 1.1.1
  * Requires at least: 5.8
  * Requires PHP: 7.4
  * Author: Lead Recorder
@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 define( 'LEAD_RECORDER_OPTION', 'lead_recorder_snippet_key' );
 define( 'LEAD_RECORDER_STORE_KEY_OPTION', 'lead_recorder_store_key' );
-define( 'LEAD_RECORDER_VERSION', '1.1.0' );
+define( 'LEAD_RECORDER_VERSION', '1.1.1' );
 
 // Overridable from wp-config.php so a test store can point at a preview
 // deployment. The tracking script follows it too, so the visits and the
@@ -128,7 +128,7 @@ function lead_recorder_sanitize_store_key( $input ) {
 }
 
 /**
- * Settings page under Settings > Lead Recorder.
+ * Settings page, as its own item in the admin sidebar.
  */
 function lead_recorder_register_settings() {
 	register_setting(
@@ -160,16 +160,47 @@ function lead_recorder_register_settings() {
 }
 add_action( 'admin_init', 'lead_recorder_register_settings' );
 
+// Its own item in the admin sidebar, so it's easy to find after install,
+// rather than tucked under Settings.
 function lead_recorder_add_settings_page() {
-	add_options_page(
+	add_menu_page(
 		__( 'Lead Recorder', 'lead-recorder' ),
 		__( 'Lead Recorder', 'lead-recorder' ),
 		'manage_options',
 		'lead-recorder',
-		'lead_recorder_render_settings_page'
+		'lead_recorder_render_settings_page',
+		'dashicons-chart-line',
+		26
 	);
 }
 add_action( 'admin_menu', 'lead_recorder_add_settings_page' );
+
+// The settings page used to live at Settings > Lead Recorder. Send old
+// links and bookmarks to the new page.
+function lead_recorder_redirect_old_settings_url() {
+	global $pagenow;
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only redirect.
+	$page = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : '';
+	if ( 'options-general.php' === $pagenow && 'lead-recorder' === $page ) {
+		wp_safe_redirect( admin_url( 'admin.php?page=lead-recorder' ) );
+		exit;
+	}
+}
+add_action( 'admin_init', 'lead_recorder_redirect_old_settings_url' );
+
+// "Settings" link next to Deactivate on the Plugins screen.
+function lead_recorder_plugin_action_links( $links ) {
+	array_unshift(
+		$links,
+		sprintf(
+			'<a href="%s">%s</a>',
+			esc_url( admin_url( 'admin.php?page=lead-recorder' ) ),
+			esc_html__( 'Settings', 'lead-recorder' )
+		)
+	);
+	return $links;
+}
+add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), 'lead_recorder_plugin_action_links' );
 
 function lead_recorder_render_settings_page() {
 	if ( ! current_user_can( 'manage_options' ) ) {
@@ -183,8 +214,12 @@ function lead_recorder_render_settings_page() {
 	<div class="wrap">
 		<h1><?php esc_html_e( 'Lead Recorder', 'lead-recorder' ); ?></h1>
 
-		<?php settings_errors( LEAD_RECORDER_OPTION ); ?>
-		<?php settings_errors( LEAD_RECORDER_STORE_KEY_OPTION ); ?>
+		<?php
+		// A top-level page doesn't get WordPress's automatic "Settings
+		// saved" notice the way a Settings submenu page does, so show
+		// every settings message here.
+		settings_errors();
+		?>
 
 		<p>
 			<?php esc_html_e( 'Paste the tracking snippet from your Lead Recorder dashboard below. We\'ll add it to the ', 'lead-recorder' ); ?><code>&lt;head&gt;</code><?php esc_html_e( ' of every page on this site.', 'lead-recorder' ); ?>

@@ -4,7 +4,7 @@ Tags: lead tracking, call tracking, conversion tracking, woocommerce, google ads
 Requires at least: 5.8
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.1.0
+Stable tag: 1.1.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -36,7 +36,7 @@ Each one is matched back to its source: Google Ads campaign, organic search, ref
 
 = WooCommerce purchase tracking =
 
-Running WooCommerce? Add a store key from your Lead Recorder dashboard (Integrations > WooCommerce > Generate store key) under Settings > Lead Recorder, and every paid order from your online checkout shows up in Lead Recorder with the ad, search or post that brought the buyer, and how much they spent.
+Running WooCommerce? Add a store key from your Lead Recorder dashboard (Integrations > WooCommerce > Generate store key) under Lead Recorder in your admin sidebar, and every paid order from your online checkout shows up in Lead Recorder with the ad, search or post that brought the buyer, and how much they spent.
 
 * Works with both the classic checkout and the block checkout.
 * The order total comes from WooCommerce on your server, not the buyer's browser.
@@ -56,7 +56,7 @@ No cookies are used, so there's no consent banner requirement for this plugin's 
 
 == External services ==
 
-This plugin connects to Lead Recorder (https://www.leadrecorder.com), the lead tracking service the site owner has an account with. It only does so once an administrator has entered a tracking key under Settings > Lead Recorder.
+This plugin connects to Lead Recorder (https://www.leadrecorder.com), the lead tracking service the site owner has an account with. It only does so once an administrator has entered a tracking key under Lead Recorder in the admin sidebar.
 
 What it loads: a single JavaScript file served from www.leadrecorder.com, enqueued on every page view once a tracking key has been entered.
 
@@ -71,7 +71,7 @@ Privacy Policy: https://www.leadrecorder.com/privacy
 
 1. Upload the plugin files to `/wp-content/plugins/lead-recorder`, or install it directly through the WordPress plugins screen.
 2. Activate the plugin through the 'Plugins' screen in WordPress.
-3. Go to **Settings → Lead Recorder**.
+3. Click **Lead Recorder** in the admin sidebar.
 4. Paste your tracking snippet (or just the key) from your [Lead Recorder dashboard](https://www.leadrecorder.com) and save.
 
 == Frequently Asked Questions ==
@@ -98,7 +98,7 @@ Nothing is loaded on your site. The plugin only enqueues the tracking script onc
 
 = How do I track WooCommerce orders? =
 
-In your Lead Recorder dashboard, open Integrations, find WooCommerce and click Generate store key. Paste the key into Settings > Lead Recorder > Store key. The field only appears when WooCommerce is active. Full details: https://www.leadrecorder.com/docs/woocommerce-purchase-tracking
+In your Lead Recorder dashboard, open Integrations, find WooCommerce and click Generate store key. Paste the key into Lead Recorder > Store key in your admin sidebar. The field only appears when WooCommerce is active. Full details: https://www.leadrecorder.com/docs/woocommerce-purchase-tracking
 
 = Why does Lead Recorder show fewer orders than WooCommerce? =
 
@@ -110,9 +110,13 @@ The script is loaded with `defer` so it doesn't block page rendering.
 
 == Screenshots ==
 
-1. The Lead Recorder settings screen under Settings → Lead Recorder.
+1. The Lead Recorder settings screen.
 
 == Changelog ==
+
+= 1.1.1 =
+* Lead Recorder now has its own item in the admin sidebar instead of sitting under Settings. Old links redirect to the new page.
+* Added a Settings link on the Plugins screen.
 
 = 1.1.0 =
 * New: WooCommerce purchase tracking. Paid orders are sent to Lead Recorder with the source that drove them, for both the classic and block checkout.
@@ -128,6 +132,9 @@ The script is loaded with `defer` so it doesn't block page rendering.
 * Initial release.
 
 == Upgrade Notice ==
+
+= 1.1.1 =
+Lead Recorder moves from Settings to its own item in the admin sidebar.
 
 = 1.1.0 =
 Adds WooCommerce purchase tracking. Nothing changes until you add a store key.
