@@ -1,10 +1,10 @@
 === Lead Recorder – Lead Source Tracking for Calls and Forms ===
 Contributors: leadrecorder, tomgalland21
-Tags: lead tracking, call tracking, form tracking, conversion tracking, google ads
+Tags: lead tracking, call tracking, conversion tracking, woocommerce, google ads
 Requires at least: 5.8
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 1.0.1
+Stable tag: 1.1.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -34,6 +34,18 @@ The plugin stores only the tracking key extracted from your snippet and builds t
 
 Each one is matched back to its source: Google Ads campaign, organic search, referral, social or direct.
 
+= WooCommerce purchase tracking =
+
+Running WooCommerce? Add a store key from your Lead Recorder dashboard (Integrations > WooCommerce > Generate store key) under Settings > Lead Recorder, and every paid order from your online checkout shows up in Lead Recorder with the ad, search or post that brought the buyer, and how much they spent.
+
+* Works with both the classic checkout and the block checkout.
+* The order total comes from WooCommerce on your server, not the buyer's browser.
+* Sent in the background after payment, so checkout is never slowed down. If the tracking script is blocked, checkout works as normal and the order shows as Unattributed.
+* No customer details are sent: no name, email, address or products.
+* Compatible with High-Performance Order Storage (HPOS).
+
+Orders created in wp-admin, subscription renewals and imported orders aren't sent. Refunds aren't subtracted.
+
 = What gets sent =
 
 The script loads from www.leadrecorder.com and sends page views and lead events (form submissions, phone clicks, booking-link clicks) to Lead Recorder so they show in your dashboard.
@@ -49,6 +61,8 @@ This plugin connects to Lead Recorder (https://www.leadrecorder.com), the lead t
 What it loads: a single JavaScript file served from www.leadrecorder.com, enqueued on every page view once a tracking key has been entered.
 
 What that script does: once loaded in a visitor's browser, it sends page view and lead conversion events (form submissions, phone number clicks and booking link clicks) to Lead Recorder's servers, so the site owner can see them in their Lead Recorder dashboard. No data is sent anywhere unless an administrator has entered a key, since without one the plugin loads nothing.
+
+WooCommerce purchases: only if WooCommerce is active and an administrator has also entered a store key. When an order from the online checkout is paid (or marked Processing or Completed), your server sends one request to https://www.leadrecorder.com/api/woocommerce/purchase, in the background via Action Scheduler. It contains the order total, currency, order date, order ID, a link to the order in wp-admin, your tracking key and the anonymous session and visitor IDs the tracking script created. It contains no customer details: no name, email address, postal address or products. The request is signed with your store key so Lead Recorder can confirm it came from your store. This is so the site owner can see which sources lead to sales, and how much revenue each one drove.
 
 Terms of Service: https://www.leadrecorder.com/terms
 Privacy Policy: https://www.leadrecorder.com/privacy
@@ -82,6 +96,14 @@ It listens for form submissions generically rather than integrating with a speci
 
 Nothing is loaded on your site. The plugin only enqueues the tracking script once a valid key has been saved.
 
+= How do I track WooCommerce orders? =
+
+In your Lead Recorder dashboard, open Integrations, find WooCommerce and click Generate store key. Paste the key into Settings > Lead Recorder > Store key. The field only appears when WooCommerce is active. Full details: https://www.leadrecorder.com/docs/woocommerce-purchase-tracking
+
+= Why does Lead Recorder show fewer orders than WooCommerce? =
+
+Only paid orders from your online checkout are sent. Orders created in wp-admin, subscription renewals and imported orders are left out, and refunds aren't subtracted.
+
 = Does it slow my site down? =
 
 The script is loaded with `defer` so it doesn't block page rendering.
@@ -92,6 +114,12 @@ The script is loaded with `defer` so it doesn't block page rendering.
 
 == Changelog ==
 
+= 1.1.0 =
+* New: WooCommerce purchase tracking. Paid orders are sent to Lead Recorder with the source that drove them, for both the classic and block checkout.
+* New: Store key setting, shown when WooCommerce is active.
+* Declares compatibility with WooCommerce HPOS and the block checkout.
+* Adds suggested privacy policy text under Settings > Privacy.
+
 = 1.0.1 =
 * Enqueue the tracking script via `wp_enqueue_script` instead of printing a raw `<script>` tag.
 * Add External services section to this readme.
@@ -100,6 +128,9 @@ The script is loaded with `defer` so it doesn't block page rendering.
 * Initial release.
 
 == Upgrade Notice ==
+
+= 1.1.0 =
+Adds WooCommerce purchase tracking. Nothing changes until you add a store key.
 
 = 1.0.1 =
 Tracking script is now properly enqueued; no action needed.
